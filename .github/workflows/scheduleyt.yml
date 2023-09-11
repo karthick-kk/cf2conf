@@ -87,7 +87,6 @@ jobs:
           --data "{
             \"name\": \"yt-block-policy\",
             \"action\": \"block\",
-            "traffic": "any(dns.domains[*] matches \"youtube.com\")",
             \"traffic\": \"any(dns.domains[*] matches \\\"youtube.com\\\")\",
             \"enabled\": true,
             \"schedule\": {
