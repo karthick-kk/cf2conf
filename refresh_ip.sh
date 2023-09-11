@@ -1,7 +1,8 @@
 #!/bin/bash
 
-ip=`curl -s https://bytefreaks.net/what-is-my-ip | grep '<h1 style="text-align: center;"' | cut -d '>' -f 2 | cut -d '<' -f 1`
-ip=`echo $ip | cut -d, -f1`
+# ip=`curl -s https://bytefreaks.net/what-is-my-ip | grep '<h1 style="text-align: center;"' | cut -d '>' -f 2 | cut -d '<' -f 1`
+# ip=`echo $ip | cut -d, -f1`
+ip=`getent ahostsv4 karthome.ddns.net | awk '{print $1}' | head -1`
 echo "Got public IP: $ip"
 echo "Checking existing IP in Gateway - Home"
 getgwip=` curl -s --request GET \
