@@ -1,4 +1,4 @@
-name: Schedule-YT-Block
+name: Schedule-Allow-YT
 on:
   workflow_dispatch:
     inputs:
@@ -10,6 +10,12 @@ on:
         type: choice
         description: Start time
         options:
+        - "01:00"
+        - "02:00"
+        - "03:00"
+        - "04:00"
+        - "05:00"
+        - "06:00"
         - "07:00"
         - "08:00"
         - "09:00"
@@ -31,6 +37,12 @@ on:
         type: choice
         description: End time
         options:
+        - "01:00"
+        - "02:00"
+        - "03:00"
+        - "04:00"
+        - "05:00"
+        - "06:00"
         - "07:00"
         - "08:00"
         - "09:00"
@@ -63,6 +75,11 @@ jobs:
           ref: ${{ github.head_ref }}
       - name: Create Schedule
         run: |
+          et=`echo ${{ inputs.starttime }}|awk -F: '{print $1}'`
+          et=`expr $et - 1`
+          et="$et:59"
+          st=`echo ${{ inputs.endtime }}|awk -F: '{print $1}'`
+          st="$st:01"
           curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$accountid/gateway/rules/35e4d431-5b32-4c6b-9336-c86cbb9a0205" \
           -H "Authorization: Bearer $apitoken" \
           -H "Content-Type: application/json" \
@@ -73,12 +90,12 @@ jobs:
             "enabled": true,
             "schedule": {
                 "time_zone": "Asia/Kolkata",
-                "sat":  "${{ inputs.starttime }}-${{ inputs.endtime }}",
-                "sun":  "${{ inputs.starttime }}-${{ inputs.endtime }}",
-                "mon":  "${{ inputs.starttime }}-${{ inputs.endtime }}",
-                "tue":  "${{ inputs.starttime }}-${{ inputs.endtime }}",
-                "wed":  "${{ inputs.starttime }}-${{ inputs.endtime }}",
-                "thu":  "${{ inputs.starttime }}-${{ inputs.endtime }}",
-                "fri":  "${{ inputs.starttime }}-${{ inputs.endtime }}"
+                "sat":  "$st-$et",
+                "sun":  "$st-$et",
+                "mon":  "$st-$et",
+                "tue":  "$st-$et",
+                "wed":  "$st-$et",
+                "thu":  "$st-$et",
+                "fri":  "$st-$et"
             }
           }'
