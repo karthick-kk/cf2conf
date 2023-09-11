@@ -1,0 +1,84 @@
+name: Schedule-YT-Block
+on:
+  workflow_dispatch:
+    inputs:
+      alldays:
+        type: boolean
+        default: true
+        description: True or False
+      starttime:
+        type: choice
+        description: Start time
+        options:
+        - 07:00
+        - 08:00
+        - 09:00
+        - 10:00
+        - 11:00
+        - 12:00
+        - 13:00
+        - 14:00
+        - 15:00
+        - 16:00
+        - 17:00
+        - 19:00
+        - 20:00
+        - 21:00
+        - 22:00
+        - 23:00
+        - 23:59
+      endtime:
+        type: choice
+        description: End time
+        options:
+        - 07:00
+        - 08:00
+        - 09:00
+        - 10:00
+        - 11:00
+        - 12:00
+        - 13:00
+        - 14:00
+        - 15:00
+        - 16:00
+        - 17:00
+        - 19:00
+        - 20:00
+        - 21:00
+        - 22:00
+        - 23:00
+        - 23:59
+
+env:
+  accountid: ${{ secrets.ACCOUNTID }}
+  apitoken: ${{ secrets.APITOKEN }}
+  
+jobs:
+  updategw:
+    runs-on: ubuntu-latest
+    if:  ${{ inputs.alldays }} 
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Create Schedule
+        run: |
+          curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$accountid/gateway/rules/35e4d431-5b32-4c6b-9336-c86cbb9a0205" \
+          -H "Authorization: Bearer $apitoken" \
+          -H "Content-Type: application/json" \
+          --data '{
+            "name": "yt-block-policy",
+            "action": "block",
+            "traffic": "any(dns.domains[*] matches \"youtube.com\")",
+            "enabled": true,
+            "schedule": {
+                "time_zone": "Asia/Kolkata",
+                "sat":  "${{ inputs.starttime }}-${{ inputs.endtime }}",
+                "sun":  "${{ inputs.starttime }}-${{ inputs.endtime }}",
+                "mon":  "${{ inputs.starttime }}-${{ inputs.endtime }}",
+                "tue":  "${{ inputs.starttime }}-${{ inputs.endtime }}",
+                "wed":  "${{ inputs.starttime }}-${{ inputs.endtime }}",
+                "thu":  "${{ inputs.starttime }}-${{ inputs.endtime }}",
+                "fri":  "${{ inputs.starttime }}-${{ inputs.endtime }}"
+            }
+          }'
