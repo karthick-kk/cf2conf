@@ -1,0 +1,17 @@
+name: EnableYT
+on:
+  workflow_dispatch:
+env:
+  accountid: ${{ secrets.ACCOUNTID }}
+  apitoken: ${{ secrets.APITOKEN }}
+  
+jobs:
+  updategw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Run check
+        run: |
+          bash disableyt.sh
